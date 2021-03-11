@@ -3,7 +3,6 @@ package com.cbellmont.ejemplodescargainternet
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.cbellmont.ejemplodescargainternet.databinding.ActivityMainBinding
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
 interface MainActivityInterface {
@@ -35,7 +34,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         withContext(Dispatchers.Main){
             binding.tvFilms.text = ""
             listFilms.forEach {
-                tvFilms.append(it.toString())
+                binding.tvFilms.append(it.toString())
             }
         }
 
