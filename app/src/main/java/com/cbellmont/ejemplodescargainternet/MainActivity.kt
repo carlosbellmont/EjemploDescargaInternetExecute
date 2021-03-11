@@ -1,18 +1,14 @@
 package com.cbellmont.ejemplodescargainternet
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.cbellmont.ejemplodescargainternet.databinding.ActivityMainBinding
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-interface MainActivityInterface {
-    suspend fun onFilmsReceived(listFilms : List<Film>)
-}
-
-// IMPORTANT: Passing the activity to a the receiver is not a good practice, it may cause issues
-// with the activity-s lifecycle. We are doing it just to keep the focus on the target of this example
-class MainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -21,18 +17,15 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        lifecycleScope.launch(Dispatchers.IO){
-            GetAllFilms.send(this@MainActivity)
+        lifecycleScope.launch(Dispatchers.Main){
+            onFilmsReceived(GetAllFilms.send())
         }
     }
 
-    override suspend fun onFilmsReceived(listFilms : List<Film>) {
-        withContext(Dispatchers.Main){
-            binding.tvFilms.text = ""
-            listFilms.forEach {
-                binding.tvFilms.append(it.toString())
-            }
+    private fun onFilmsReceived(listFilms : List<Film>) {
+        binding.tvFilms.text = ""
+        listFilms.forEach {
+            binding.tvFilms.append(it.toString())
         }
-
     }
 }
