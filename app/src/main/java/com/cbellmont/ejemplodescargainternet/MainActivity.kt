@@ -2,6 +2,7 @@ package com.cbellmont.ejemplodescargainternet
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import com.cbellmont.ejemplodescargainternet.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 
@@ -13,19 +14,14 @@ interface MainActivityInterface {
 // with the activity-s lifecycle. We are doing it just to keep the focus on the target of this example
 class MainActivity : AppCompatActivity(), MainActivityInterface {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
-
-        setContentView(R.layout.activity_main)
-
-
-        CoroutineScope(Dispatchers.IO).launch{
+        lifecycleScope.launch(Dispatchers.IO){
             GetAllFilms.send(this@MainActivity)
         }
     }
